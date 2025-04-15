@@ -2,21 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NotesTube</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Lecture Summarizer Hub</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
   <div class="container">
-    <h1>NotesTube</h1>
-    <div class="clock">
-      <div class="hand hour"></div>
-      <div class="hand minute"></div>
-      <div class="hand second"></div>
+    <h1>Lecture Summarizer Hub</h1>
+    <input type="text" id="video-url" placeholder="Paste YouTube Lecture Link" />
+    <button onclick="summarize()">Summarize</button>
+
+    <div id="loader" class="clock-container">
+      <canvas id="clock" width="200" height="200"></canvas>
     </div>
-    <input type="text" placeholder="Paste YouTube Link Here" id="youtubeLink"/>
-    <button onclick="generateNotes()">Generate Notes</button>
+
+    <div id="result" class="result-box"></div>
   </div>
-  <script src="script.js"></script>
+
+  <script src="{{ url_for('static', filename='clock.js') }}"></script>
+  <script>
+    function summarize() {
+      const url = document.getElementById("video-url").value;
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("result").innerHTML = "";
+
+      fetch("/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById("loader").style.display = "none";
+          if (data.summary) {
+            document.getElementById("result").innerText = data.summary;
+          } else {
+            document.getElementById("result").innerText = "Error: " + data.error;
+          }
+        });
+    }
+
+    drawClock(); // Start the clock
+  </script>
 </body>
 </html>
