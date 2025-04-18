@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Lecture Summarizer Hub</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+ <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
@@ -18,7 +18,7 @@
     <div id="result" class="result-box"></div>
   </div>
 
-  <script src="{{ url_for('static', filename='clock.js') }}"></script>
+<script src="clock.js"></script>
   <script>
     function summarize() {
       const url = document.getElementById("video-url").value;
